@@ -4,10 +4,19 @@ import path from "path";
 // Konfigurasi penyimpanan file
 const storage: StorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Simpan file di folder "uploads/"
+    // Simpan file di folder "uploads/"
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Nama unik
+    const { nisn } = req.params; // Ambil NISN dari URL params
+    if (!nisn) {
+      return cb(new Error("NISN is required in the URL"), ""); // Jika tidak ada NISN, error
+    }
+
+    const ext = path.extname(file.originalname); // Ambil ekstensi file
+    const filename = `${nisn}${ext}`; // Nama file berdasarkan NISN
+
+    cb(null, filename); // Set filename
   },
 });
 

@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../config/database";
 import { Siswa } from "../models/Siswa";
+import fs from "fs";
+import path from "path";
 
 const siswaRepository = AppDataSource.getRepository(Siswa);
 
@@ -57,6 +59,17 @@ export const deleteSiswa = async (req: Request, res: Response) => {
     const { nisn } = req.params;
     const siswa = await siswaRepository.findOneBy({ nisn });
     if (!siswa) return res.status(404).json({ message: "Siswa not found" });
+
+    if (siswa.qrcode_imageURL) {
+      const filename = path.basename(siswa.qrcode_imageURL);
+      const filePath = path.join(__dirname, "../../uploads", filename);
+
+      console.log("Deleting file:", filePath);
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath); // Hapus file
+      }
+    }
 
     await siswaRepository.delete({ nisn });
     res.json({ message: "Siswa deleted successfully" });
