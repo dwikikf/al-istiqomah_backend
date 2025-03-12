@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
+import { Absensi } from "./Absensi";
 
 @Entity("siswa")
 export class Siswa {
@@ -10,4 +11,7 @@ export class Siswa {
 
   @Column({ type: "text", nullable: true })
   qrcode_imageURL!: string;
+
+  @OneToMany(() => Absensi, (absensi) => absensi.siswa)
+  absensi!: Absensi[];
 }

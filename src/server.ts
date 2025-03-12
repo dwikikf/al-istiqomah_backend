@@ -6,6 +6,7 @@ import { AppDataSource } from "./config/database";
 import "reflect-metadata";
 import siswaRoutes from "./routes/siswaRoutes";
 import authRoutes from "./routes/authRoutes";
+import absensiRoutes from "./routes/absensiRoutes";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/siswa", siswaRoutes);
+app.use("/api/absensi", absensiRoutes);
 
 // Jalankan server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

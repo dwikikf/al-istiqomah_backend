@@ -1,11 +1,8 @@
 import { Request, Response } from "express";
-import { AppDataSource } from "../config/database";
-import { Siswa } from "../models/Siswa";
 import QRCode from "qrcode";
 import fs from "fs";
 import path from "path";
-
-const siswaRepository = AppDataSource.getRepository(Siswa);
+import { siswaRepository } from "../repositories/SiswaRepository";
 
 // ✅ Get all students
 export const getAllSiswa = async (req: Request, res: Response) => {
