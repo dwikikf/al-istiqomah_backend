@@ -64,3 +64,22 @@ export const deleteSiswa = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error deleting student", error });
   }
 };
+
+// ✅ upload QR code yang memang di buat terpisah dlu. tidak langsung generate saat create siswa.
+export const uploadQrCode = async (req: Request, res: Response) => {
+  try {
+    const { nisn } = req.params;
+    const siswa = await siswaRepository.findOneBy({ nisn });
+
+    if (!siswa) return res.status(404).json({ message: "Siswa not found" });
+
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+
+    siswa.qrcode_imageURL = `/uploads/${req.file.filename}`; // Simpan path gambar
+    await siswaRepository.save(siswa);
+
+    res.json({ message: "QR Code uploaded successfully", siswa });
+  } catch (error) {
+    res.status(500).json({ message: "Error uploading file", error });
+  }
+};
