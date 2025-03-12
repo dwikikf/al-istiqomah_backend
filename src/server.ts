@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { AppDataSource } from "./config/database";
 import "reflect-metadata";
 import siswaRoutes from "./routes/siswaRoutes";
+import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.get("/", (req: Request, res: Response) => {
   return res.send("API is running...");
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api/siswa", siswaRoutes);
 
 // Jalankan server

@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 import { Siswa } from "../models/Siswa";
+import { User } from "../models/User";
 
 dotenv.config();
 
@@ -13,5 +14,5 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true, // Untuk development, gunakan migration di production
   logging: false,
-  entities: [Siswa],
+  entities: [Siswa, User],
 });
