@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../config/database";
 import { Siswa } from "../models/Siswa";
+import QRCode from "qrcode";
 import fs from "fs";
 import path from "path";
 
@@ -30,8 +31,18 @@ export const getSiswaByNisn = async (req: Request, res: Response) => {
 // ✅ Create new student
 export const createSiswa = async (req: Request, res: Response) => {
   try {
-    const { nisn, nama, qrcode_imageURL } = req.body;
-    const newSiswa = siswaRepository.create({ nisn, nama, qrcode_imageURL });
+    const { nisn, nama } = req.body;
+
+    // set path image
+    const qrCodePath = path.join("uploads", `${nisn}.png`);
+    // Buat QR Code
+    await QRCode.toFile(qrCodePath, nisn);
+
+    const newSiswa = siswaRepository.create({
+      nisn,
+      nama,
+      qrcode_imageURL: qrCodePath,
+    });
     await siswaRepository.save(newSiswa);
     res.status(201).json(newSiswa);
   } catch (error) {
