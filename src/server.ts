@@ -27,6 +27,8 @@ app.get("/", (req: Request, res: Response) => {
   return res.send("API is running...");
 });
 
+app.use("/uploads", express.static("uploads"));
+
 app.use("/api/auth", authRoutes);
 app.use("/api/siswa", siswaRoutes);
 

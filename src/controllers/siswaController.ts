@@ -20,9 +20,22 @@ export const getAllSiswa = async (req: Request, res: Response) => {
 // ✅ Get student by NISN
 export const getSiswaByNisn = async (req: Request, res: Response) => {
   try {
-    const siswa = await siswaRepository.findOneBy({ nisn: req.params.nisn });
-    if (!siswa) return res.status(404).json({ message: "Siswa not found" });
+    const siswaWithUrlNotFull = await siswaRepository.findOneBy({
+      nisn: req.params.nisn,
+    });
+    if (!siswaWithUrlNotFull)
+      return res.status(404).json({ message: "Siswa not found" });
+
+    const baseURL = "http://localhost:5000"; // Sesuaikan dengan domain backend
+    const siswa = {
+      ...siswaWithUrlNotFull,
+      qrcode_imageURL: `${baseURL}/${siswaWithUrlNotFull.qrcode_imageURL.replace(/\\/g, "/")}`,
+    };
+
+    console.log(siswa);
     res.json(siswa);
+
+    // res.json(siswa);
   } catch (error) {
     res.status(500).json({ message: "Error fetching data", error });
   }
