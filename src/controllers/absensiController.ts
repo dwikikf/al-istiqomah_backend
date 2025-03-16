@@ -9,7 +9,6 @@ export const getAllAbsensi = async (req: Request, res: Response) => {
   const startDate = new Date();
   startDate.setUTCHours(0, 0, 0, 0);
   console.log("Rentang tanggal awal : ", startDate);
-
   const endDate = new Date(startDate);
   endDate.setUTCDate(startDate.getDate() + 1);
   console.log("Tanggal besok: ", endDate);
@@ -19,6 +18,7 @@ export const getAllAbsensi = async (req: Request, res: Response) => {
       where: {
         tanggal: Between(startDate, endDate),
       },
+      relations: ["siswa"],
     });
     res.json(absensi);
   } catch (error) {

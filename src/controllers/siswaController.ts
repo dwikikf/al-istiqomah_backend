@@ -20,10 +20,11 @@ export const getSiswaByNisn = async (req: Request, res: Response) => {
     const siswaWithUrlNotFull = await siswaRepository.findOneBy({
       nisn: req.params.nisn,
     });
+
     if (!siswaWithUrlNotFull)
       return res.status(404).json({ message: "Siswa not found" });
 
-    const baseURL = "http://localhost:5000"; // Sesuaikan dengan domain backend
+    const baseURL = "http://localhost:5000";
     const siswa = {
       ...siswaWithUrlNotFull,
       qrcode_imageURL: `${baseURL}/${siswaWithUrlNotFull.qrcode_imageURL.replace(/\\/g, "/")}`,
@@ -53,9 +54,13 @@ export const createSiswa = async (req: Request, res: Response) => {
       nama,
       qrcode_imageURL: qrCodePath,
     });
-    await siswaRepository.save(newSiswa);
+
+    await siswaRepository.insert(newSiswa);
     res.status(201).json(newSiswa);
-  } catch (error) {
+  } catch (error: any) {
+    if ((error.code = "23505")) {
+      return res.status(400).json({ message: "NISN sudah terdaftar!" });
+    }
     res.status(500).json({ message: "Error creating student", error });
   }
 };
@@ -68,7 +73,8 @@ export const updateSiswa = async (req: Request, res: Response) => {
     if (!siswa) return res.status(404).json({ message: "Siswa not found" });
 
     const updatedSiswa = await siswaRepository.save({ ...siswa, ...req.body });
-    res.json(updatedSiswa);
+
+    res.status(201).json(updatedSiswa);
   } catch (error) {
     res.status(500).json({ message: "Error updating student", error });
   }
@@ -93,7 +99,7 @@ export const deleteSiswa = async (req: Request, res: Response) => {
     }
 
     await siswaRepository.delete({ nisn });
-    res.json({ message: "Siswa deleted successfully" });
+    res.json({ message: "Siswa deleted successfully." });
   } catch (error) {
     res.status(500).json({ message: "Error deleting student", error });
   }

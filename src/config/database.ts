@@ -14,6 +14,6 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: true, // Untuk development, gunakan migration di production
-  logging: false,
+  logging: true,
   entities: [Siswa, User, Absensi],
 });
