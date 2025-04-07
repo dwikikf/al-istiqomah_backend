@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { createAbsensi } from "../services/AbsensiService";
 import { AbsensiStatus } from "../models/Absensi";
 import { absensiRepository } from "../repositories/AbsensiRepository";
-import { Between, LessThan, MoreThanOrEqual } from "typeorm";
+import { Between } from "typeorm";
 
 // getAllAbsensi default by hari ini
 export const getAllAbsensi = async (req: Request, res: Response) => {
@@ -28,8 +28,12 @@ export const getAllAbsensi = async (req: Request, res: Response) => {
 
 export const addAbsensi = async (req: Request, res: Response) => {
   try {
-    const { nisn, status } = req.body;
-    const absensi = await createAbsensi(nisn, status || AbsensiStatus.HADIR);
+    const { nisn, status, tanggal } = req.body;
+    const absensi = await createAbsensi(
+      nisn,
+      status || AbsensiStatus.H,
+      tanggal || new Date()
+    );
     res.status(201).json(absensi);
   } catch (error) {
     const err = error as Error;

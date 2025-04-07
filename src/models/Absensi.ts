@@ -8,9 +8,9 @@ import {
 import { Siswa } from "./Siswa";
 
 export enum AbsensiStatus {
-  HADIR = "Hadir",
-  IZIN = "Izin",
-  SAKIT = "Sakit",
+  H = "H",
+  I = "I",
+  S = "S",
 }
 
 @Entity("absensi")
@@ -25,9 +25,9 @@ export class Absensi {
   @Column({ type: "varchar", length: 10 })
   nisn!: string;
 
-  @Column({ type: "date" })
+  @Column()
   tanggal!: Date;
 
-  @Column({ type: "enum", enum: AbsensiStatus, default: AbsensiStatus.HADIR })
+  @Column({ type: "enum", enum: AbsensiStatus, default: AbsensiStatus.H })
   status!: AbsensiStatus;
 }
